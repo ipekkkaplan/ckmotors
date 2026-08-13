@@ -57,17 +57,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Multer'i doğrudan CloudinaryStorage ile ve form verilerini doğru işleyecek şekilde tanımlıyoruz
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async () => ({
-    folder: 'ckmotors-uploads',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-  }),
+  params: async (_req, file) => {
+    return {
+      folder: 'ckmotors-uploads',
+      format: file.mimetype.split('/')[1] || 'png',
+      public_id: 'motor-' + Date.now(),
+    };
+  },
 });
 
 const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
 });
 
 const apiSiniri = rateLimit({
