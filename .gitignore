@@ -1,0 +1,21 @@
+# Bağımlılıklar ve derleme çıktısı
+node_modules/
+dist/
+
+# Veritabanı ve yüklenen dosyalar — bunlar sunucuya özeldir, koda dahil edilmez
+bayi.db
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Gerçek şifre/anahtar değerlerini içerecek olan dosya — asla commit etmeyin.
+# Sunucuda doğrudan doldurup orada bırakın; şablonu görmek için
+# ecosystem.config.example.js dosyasına bakın.
+ecosystem.config.js
+
+# Ortam değişkenleri
+.env
+.env.local
+
+# Sistem/editör dosyaları
+.DS_Store
+*.log

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kuba ve RKS motosiklet modeli teknik özellikleri ve detayları.">
+<title>Motor Detayı</title>
+<link rel="stylesheet" href="/stil.css">
+</head>
+<body>
+<header>
+  <div class="logo">KUBA <span>&</span> RKS</div>
+  <nav aria-label="Ana menü">
+    <a href="/">Motorlar</a>
+    <a href="/admin">Yönetim</a>
+  </nav>
+</header>
+
+<main class="detay">
+  <a class="geri" href="/">&larr; Tüm motorlar</a>
+  <div id="icerik" aria-live="polite"></div>
+</main>
+
+<footer>© 2026 Kuba & RKS Motor Bayisi — Tüm hakları saklıdır.</footer>
+
+<script>
+  const id = location.pathname.split('/').pop();
+  const icerik = document.getElementById('icerik');
+
+  const OZELLIK_ETIKETLERI = [
+    ['motor_hacmi', 'Silindir Hacmi'],
+    ['motor_tipi', 'Motor Tipi'],
+    ['vites', 'Şanzıman'],
+    ['guc', 'Maksimum Güç'],
+    ['tork', 'Maksimum Tork'],
+    ['yakit_tipi', 'Yakıt Tipi'],
+    ['sogutma', 'Soğutma'],
+    ['fren', 'Ön / Arka Fren'],
+    ['lastik', 'Ön / Arka Lastik'],
+    ['uzunluk', 'Uzunluk'],
+    ['genislik', 'Genişlik'],
+    ['yukseklik', 'Yükseklik'],
+    ['dingil_mesafesi', 'Dingil Mesafesi'],
+    ['agirlik', 'Boş Ağırlık'],
+    ['azami_yuk', 'Azami Yük'],
+    ['yakit_deposu', 'Yakıt Tankı Kapasitesi'],
+    ['renkler', 'Renk Seçenekleri'],
+  ];
+
+  function ozellikSatirlariniOlustur(motor) {
+    return OZELLIK_ETIKETLERI
+      .filter(([alan]) => motor[alan])
+      .map(([alan, etiket]) => `<tr><td>${etiket}</td><td>${motor[alan]}</td></tr>`)
+      .join('');
+  }
+
+  async function motoruYukle() {
+    const yanit = await fetch('/api/motorlar/' + id);
+    if (!yanit.ok) {
+      icerik.innerHTML = '<p>Motor bulunamadı.</p>';
+      return;
+    }
+    const m = await yanit.json();
+    document.title = `${m.marka} ${m.model} — Kuba & RKS Motor Bayisi`;
+
+    icerik.innerHTML = `
+      <article class="detay-kutu">
+        ${m.resim
+          ? `<img src="${m.resim}" alt="${m.marka} ${m.model}" decoding="async">`
+          : `<div class="resim-yok" aria-hidden="true">Resim yakında</div>`}
+        <div class="detay-bilgi">
+          <div class="etiket-marka">${m.marka}</div>
+          <h1>${m.model}</h1>
+          <span class="durum ${m.stok ? 'durum-stokta' : 'durum-tukendi'}">
+            ${m.stok ? '✔ Stokta' : 'Stokta yok'}
+          </span>
+          ${m.aciklama ? `<p>${m.aciklama}</p>` : ''}
+          <table class="ozellikler" aria-label="Teknik özellikler">
+            ${ozellikSatirlariniOlustur(m)}
+          </table>
+        </div>
+      </article>`;
+  }
+
+  motoruYukle();
+</script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kuba & RKS Motor Bayisi yönetim paneli.">
+<title>Yönetim Paneli — Kuba & RKS</title>
+<link rel="stylesheet" href="/stil.css">
+</head>
+<body>
+<header>
+  <div class="logo">KUBA <span>&</span> RKS — Yönetim</div>
+  <nav aria-label="Ana menü">
+    <a href="/">Siteye Dön</a>
+    <a href="#" id="cikisBtn" class="gizli">Çıkış</a>
+  </nav>
+</header>
+
+<main class="admin-kap">
+  <div id="mesaj" class="mesaj" role="status" aria-live="polite"></div>
+
+  <!-- Giriş -->
+  <section class="panel" id="girisPanel" aria-labelledby="giris-baslik">
+    <h2 id="giris-baslik">Yönetici Girişi</h2>
+    <form id="girisForm">
+      <label for="sifre">Şifre</label>
+      <input type="password" id="sifre" name="sifre" autocomplete="current-password" required>
+      <br><br>
+      <button class="btn" type="submit">Giriş Yap</button>
+    </form>
+  </section>
+
+  <!-- Panel -->
+  <div id="adminPanel" class="gizli">
+    <section class="panel" aria-labelledby="form-baslik">
+      <h2 id="formBaslik">Yeni Motor Ekle</h2>
+      <form id="motorForm">
+        <input type="hidden" id="motorId">
+
+        <fieldset>
+          <legend>Genel Bilgiler</legend>
+          <div class="form-grid">
+            <div>
+              <label for="marka">Marka *</label>
+              <select id="marka" name="marka" required>
+                <option value="Kuba">Kuba</option>
+                <option value="RKS">RKS</option>
+              </select>
+            </div>
+            <div>
+              <label for="model">Model *</label>
+              <input id="model" name="model" required>
+            </div>
+            <div>
+              <label for="fiyat">Fiyat (TL, dahili not — sitede gösterilmez)</label>
+              <input id="fiyat" name="fiyat" type="number" step="0.01">
+            </div>
+            <div>
+              <label for="stok">Stok Durumu</label>
+              <select id="stok" name="stok">
+                <option value="1">Stokta</option>
+                <option value="0">Stokta yok</option>
+              </select>
+            </div>
+            <div>
+              <label for="resim">Resim (jpg/png/webp, maks 5MB)</label>
+              <input id="resim" name="resim" type="file" accept=".jpg,.jpeg,.png,.webp">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Teknik Özellikler</legend>
+          <div class="form-grid">
+            <div><label for="motor_hacmi">Silindir Hacmi</label><input id="motor_hacmi" name="motor_hacmi" placeholder="örn: 125 cc"></div>
+            <div><label for="motor_tipi">Motor Tipi</label><input id="motor_tipi" name="motor_tipi" placeholder="örn: 4 Zamanlı, Tek Silindir"></div>
+            <div><label for="vites">Şanzıman</label><input id="vites" name="vites" placeholder="örn: 5 Vites / CVT"></div>
+            <div><label for="guc">Maksimum Güç</label><input id="guc" name="guc" placeholder="örn: 9.52 HP @ 7500 rpm"></div>
+            <div><label for="tork">Maksimum Tork</label><input id="tork" name="tork" placeholder="örn: 9.80 Nm @ 6500 rpm"></div>
+            <div><label for="yakit_tipi">Yakıt Tipi</label><input id="yakit_tipi" name="yakit_tipi" placeholder="örn: Benzin"></div>
+            <div><label for="sogutma">Soğutma</label><input id="sogutma" name="sogutma" placeholder="örn: Hava Soğutmalı"></div>
+            <div><label for="fren">Ön / Arka Fren</label><input id="fren" name="fren" placeholder="örn: Disk / Kampana"></div>
+            <div><label for="lastik">Ön / Arka Lastik</label><input id="lastik" name="lastik" placeholder="örn: 2.75-18″ / 90/90-18″"></div>
+            <div><label for="uzunluk">Uzunluk</label><input id="uzunluk" name="uzunluk" placeholder="örn: 2030 mm"></div>
+            <div><label for="genislik">Genişlik</label><input id="genislik" name="genislik" placeholder="örn: 750 mm"></div>
+            <div><label for="yukseklik">Yükseklik</label><input id="yukseklik" name="yukseklik" placeholder="örn: 1070 mm"></div>
+            <div><label for="dingil_mesafesi">Dingil Mesafesi</label><input id="dingil_mesafesi" name="dingil_mesafesi" placeholder="örn: 1365 mm"></div>
+            <div><label for="agirlik">Boş Ağırlık</label><input id="agirlik" name="agirlik" placeholder="örn: 110 kg"></div>
+            <div><label for="azami_yuk">Azami Yük</label><input id="azami_yuk" name="azami_yuk" placeholder="örn: 250 kg"></div>
+            <div><label for="yakit_deposu">Yakıt Tankı Kapasitesi</label><input id="yakit_deposu" name="yakit_deposu" placeholder="örn: 14 lt"></div>
+            <div><label for="renkler">Renkler</label><input id="renkler" name="renkler" placeholder="örn: Siyah, Kırmızı"></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Açıklama</legend>
+          <div class="form-grid">
+            <div class="tam">
+              <label for="aciklama">Açıklama</label>
+              <textarea id="aciklama" name="aciklama"></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <button class="btn" type="submit" id="kaydetBtn">Kaydet</button>
+        <button class="btn btn-gri gizli" type="button" id="iptalBtn">İptal</button>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="liste-baslik">
+      <h2 id="liste-baslik">Mevcut Motorlar</h2>
+      <table class="liste-tablo">
+        <caption class="gorunmez">Mevcut motorların listesi</caption>
+        <thead>
+          <tr>
+            <th scope="col">Resim</th>
+            <th scope="col">Marka</th>
+            <th scope="col">Model</th>
+            <th scope="col">Fiyat</th>
+            <th scope="col">Stok</th>
+            <th scope="col">İşlem</th>
+          </tr>
+        </thead>
+        <tbody id="liste"></tbody>
+      </table>
+    </section>
+  </div>
+</main>
+
+<script>
+  const mesajEl = document.getElementById('mesaj');
+  const girisPanel = document.getElementById('girisPanel');
+  const adminPanel = document.getElementById('adminPanel');
+  const cikisBtn = document.getElementById('cikisBtn');
+  const iptalBtn = document.getElementById('iptalBtn');
+
+  const ALANLAR = [
+    'marka', 'model', 'fiyat', 'motor_hacmi', 'motor_tipi', 'vites', 'guc', 'tork',
+    'yakit_tipi', 'sogutma', 'fren', 'lastik', 'uzunluk', 'genislik', 'yukseklik',
+    'dingil_mesafesi', 'agirlik', 'azami_yuk', 'yakit_deposu', 'renkler', 'aciklama', 'stok',
+  ];
+
+  function mesajGoster(metin, tip) {
+    mesajEl.textContent = metin;
+    mesajEl.className = 'mesaj ' + tip;
+    setTimeout(() => { mesajEl.className = 'mesaj'; }, 4000);
+  }
+
+  function fiyatYaz(f) {
+    if (!f) return 'Belirtilmedi';
+    return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(f);
+  }
+
+  async function durumKontrol() {
+    const { girisli } = await (await fetch('/api/admin/durum')).json();
+    girisPanel.classList.toggle('gizli', girisli);
+    adminPanel.classList.toggle('gizli', !girisli);
+    cikisBtn.classList.toggle('gizli', !girisli);
+    if (girisli) listeYukle();
+  }
+
+  document.getElementById('girisForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const yanit = await fetch('/api/admin/giris', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sifre: document.getElementById('sifre').value }),
+    });
+    if (yanit.ok) durumKontrol();
+    else mesajGoster('Şifre yanlış', 'hata');
+  });
+
+  cikisBtn.addEventListener('click', async e => {
+    e.preventDefault();
+    await fetch('/api/admin/cikis', { method: 'POST' });
+    durumKontrol();
+  });
+
+  async function listeYukle() {
+    const motorlar = await (await fetch('/api/motorlar')).json();
+    document.getElementById('liste').innerHTML = motorlar.map(m => `
+      <tr>
+        <td>${m.resim ? `<img src="${m.resim}" alt="${m.marka} ${m.model}" loading="lazy">` : '—'}</td>
+        <td>${m.marka}</td>
+        <td>${m.model}</td>
+        <td>${fiyatYaz(m.fiyat)}</td>
+        <td>${m.stok ? 'Stokta' : 'Yok'}</td>
+        <td>
+          <button type="button" class="btn btn-kucuk" onclick="duzenle(${m.id})">Düzenle</button>
+          <button type="button" class="btn btn-kucuk btn-gri" onclick="sil(${m.id})">Sil</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function duzenle(id) {
+    const m = await (await fetch('/api/motorlar/' + id)).json();
+    document.getElementById('motorId').value = m.id;
+    ALANLAR.forEach(a => { document.getElementById(a).value = m[a] ?? ''; });
+    document.getElementById('formBaslik').textContent = 'Motoru Düzenle: ' + m.model;
+    iptalBtn.classList.remove('gizli');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function formSifirla() {
+    document.getElementById('motorForm').reset();
+    document.getElementById('motorId').value = '';
+    document.getElementById('formBaslik').textContent = 'Yeni Motor Ekle';
+    iptalBtn.classList.add('gizli');
+  }
+  iptalBtn.addEventListener('click', formSifirla);
+
+  document.getElementById('motorForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('motorId').value;
+    const veri = new FormData();
+    ALANLAR.forEach(a => veri.append(a, document.getElementById(a).value));
+    const dosya = document.getElementById('resim').files[0];
+    if (dosya) veri.append('resim', dosya);
+
+    const yanit = await fetch(id ? '/api/admin/motorlar/' + id : '/api/admin/motorlar', {
+      method: id ? 'PUT' : 'POST',
+      body: veri,
+    });
+    if (yanit.ok) {
+      mesajGoster(id ? 'Motor güncellendi' : 'Motor eklendi', 'basari');
+      formSifirla();
+      listeYukle();
+    } else {
+      const hata = await yanit.json().catch(() => ({}));
+      mesajGoster(hata.hata || 'Bir hata oluştu', 'hata');
+    }
+  });
+
+  async function sil(id) {
+    if (!confirm('Bu motoru silmek istediğinize emin misiniz?')) return;
+    const yanit = await fetch('/api/admin/motorlar/' + id, { method: 'DELETE' });
+    if (yanit.ok) { mesajGoster('Motor silindi', 'basari'); listeYukle(); }
+    else mesajGoster('Silinemedi', 'hata');
+  }
+
+  durumKontrol();
+</script>
+</body>
+</html>

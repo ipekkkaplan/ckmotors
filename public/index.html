@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kuba ve RKS motosiklet modellerini keşfedin. Yetkili bayimizden tüm modeller ve detaylı teknik özellikler.">
+<title>Kuba & RKS Motor Bayisi</title>
+<link rel="stylesheet" href="/stil.css">
+</head>
+<body>
+<header>
+  <div class="logo">KUBA <span>&</span> RKS</div>
+  <nav aria-label="Ana menü">
+    <a href="/">Motorlar</a>
+    <a href="/admin">Yönetim</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-baslik">
+    <h1 id="hero-baslik">Kuba & RKS Yetkili Bayi</h1>
+    <p>Kaplan Otomotiv</p>
+  </section>
+
+  <section class="filtreler" aria-label="Markaya göre filtrele">
+    <button type="button" class="aktif" data-marka="" aria-pressed="true">Tümü</button>
+    <button type="button" data-marka="Kuba" aria-pressed="false">Kuba</button>
+    <button type="button" data-marka="RKS" aria-pressed="false">RKS</button>
+  </section>
+
+  <section class="grid" id="grid" aria-live="polite" aria-label="Motor listesi"></section>
+</main>
+
+<footer>© 2026 Kuba & RKS Motor Bayisi — Tüm hakları saklıdır.</footer>
+
+<script>
+  const grid = document.getElementById('grid');
+  const filtreButonlari = document.querySelectorAll('.filtreler button');
+
+  function motorKarti(m) {
+    const a = document.createElement('a');
+    a.className = 'kart';
+    a.href = '/motor/' + m.id;
+    a.innerHTML = `
+      ${m.resim
+        ? `<img src="${m.resim}" alt="${m.marka} ${m.model}" loading="lazy" decoding="async">`
+        : `<div class="resim-yok" aria-hidden="true">Resim yakında</div>`}
+      <div class="icerik">
+        <div class="etiket-marka">${m.marka}</div>
+        <h3>${m.model}</h3>
+        ${m.stok ? '' : '<div class="durum durum-tukendi">Stokta yok</div>'}
+      </div>`;
+    return a;
+  }
+
+  async function motorlariYukle(marka = '') {
+    const url = marka ? '/api/motorlar?marka=' + encodeURIComponent(marka) : '/api/motorlar';
+    const yanit = await fetch(url);
+    const motorlar = await yanit.json();
+
+    grid.innerHTML = '';
+    if (!motorlar.length) {
+      grid.innerHTML = '<p class="bos-durum">Henüz motor eklenmedi.</p>';
+      return;
+    }
+    const parca = document.createDocumentFragment();
+    motorlar.forEach(m => parca.appendChild(motorKarti(m)));
+    grid.appendChild(parca);
+  }
+
+  filtreButonlari.forEach(buton => {
+    buton.addEventListener('click', () => {
+      filtreButonlari.forEach(b => {
+        b.classList.remove('aktif');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      buton.classList.add('aktif');
+      buton.setAttribute('aria-pressed', 'true');
+      motorlariYukle(buton.dataset.marka);
+    });
+  });
+
+  motorlariYukle();
+</script>
+</body>
+</html>

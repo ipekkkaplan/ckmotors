@@ -1,0 +1,348 @@
+/* ==========================================================================
+   Kuba & RKS Motor Bayisi — Tasarım Sistemi
+   ========================================================================== */
+
+:root {
+  /* Renkler */
+  --ana: #d32f2f;
+  --ana-koyu: #b71c1c;
+  --koyu: #1a1a1a;
+  --koyu-yumusak: #3a3a3a;
+  --gri: #f5f5f5;
+  --yazi: #222;
+  --yazi-soluk: #666;
+  --beyaz: #fff;
+  --kenar: #e0e0e0;
+  --kenar-soluk: #eee;
+  --resim-yer-tutucu: #e0e0e0;
+  --basari: #2e7d32;
+  --basari-bg: #e8f5e9;
+  --hata: #c62828;
+  --hata-bg: #ffebee;
+
+  /* Boşluk skalası */
+  --b-1: 4px;
+  --b-2: 8px;
+  --b-3: 12px;
+  --b-4: 16px;
+  --b-5: 20px;
+  --b-6: 24px;
+  --b-8: 32px;
+
+  /* Yüzey */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-pill: 20px;
+  --golge: 0 2px 8px rgba(0, 0, 0, .08);
+  --gecis: .15s ease;
+  --max-genislik: 1200px;
+}
+
+/* ==========================================================================
+   Sıfırlama & Temel
+   ========================================================================== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--gri);
+  color: var(--yazi);
+  line-height: 1.5;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+/* Klavyeyle gezinen kullanıcılar için görünür odak halkası */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--ana);
+  outline-offset: 2px;
+}
+
+/* Ekran okuyucular için görünmez ama erişilebilir metin */
+.gorunmez {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* JS ile içeriği gizlemek için tek merkezi sınıf (inline style yerine) */
+.gizli { display: none; }
+
+/* ==========================================================================
+   Üst Bilgi (Header)
+   ========================================================================== */
+
+header {
+  background: var(--koyu);
+  color: var(--beyaz);
+  padding: var(--b-4) var(--b-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--b-3);
+}
+header .logo { font-size: 1.5rem; font-weight: 800; }
+header .logo span { color: var(--ana); }
+
+nav a {
+  color: #ddd;
+  text-decoration: none;
+  margin-left: var(--b-4);
+  font-weight: 600;
+  transition: color var(--gecis);
+}
+nav a:hover,
+nav a:focus-visible { color: var(--beyaz); }
+
+/* ==========================================================================
+   Hero (Vitrin başlığı)
+   ========================================================================== */
+
+.hero {
+  background: linear-gradient(135deg, var(--koyu), var(--koyu-yumusak));
+  color: var(--beyaz);
+  text-align: center;
+  padding: var(--b-8) var(--b-4);
+}
+.hero h1 { font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: var(--b-2); }
+.hero p { color: #ccc; }
+
+/* ==========================================================================
+   Filtreler
+   ========================================================================== */
+
+.filtreler {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--b-2);
+  padding: var(--b-5);
+}
+.filtreler button {
+  background: var(--beyaz);
+  border: 2px solid var(--ana);
+  color: var(--ana);
+  padding: var(--b-2) 22px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: .95rem;
+  transition: background var(--gecis), color var(--gecis);
+}
+.filtreler button.aktif,
+.filtreler button:hover { background: var(--ana); color: var(--beyaz); }
+
+/* ==========================================================================
+   Vitrin Kartları
+   ========================================================================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--b-5);
+  padding: 0 var(--b-6) var(--b-8);
+  max-width: var(--max-genislik);
+  margin: 0 auto;
+}
+.grid .bos-durum {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--yazi-soluk);
+  padding: var(--b-8) 0;
+}
+
+.kart {
+  background: var(--beyaz);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--golge);
+  transition: transform var(--gecis);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.kart:hover,
+.kart:focus-visible { transform: translateY(-4px); }
+
+.kart img,
+.kart .resim-yok,
+.detay-kutu img,
+.detay-kutu .resim-yok {
+  width: 100%;
+  object-fit: cover;
+  background: var(--resim-yer-tutucu);
+}
+.kart img,
+.kart .resim-yok { height: 180px; }
+.kart .resim-yok,
+.detay-kutu .resim-yok {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.kart .icerik { padding: var(--b-4); }
+.etiket-marka {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--ana);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.kart h3 { margin: var(--b-1) 0 var(--b-2); }
+
+.durum { font-weight: 700; font-size: .85rem; }
+.durum-stokta { color: var(--basari); }
+.durum-tukendi { color: var(--hata); }
+
+/* ==========================================================================
+   Motor Detay Sayfası
+   ========================================================================== */
+
+.detay { max-width: 1000px; margin: 30px auto; padding: 0 var(--b-5); }
+.geri {
+  display: inline-block;
+  margin-bottom: var(--b-4);
+  color: var(--ana);
+  text-decoration: none;
+  font-weight: 700;
+}
+.geri:hover,
+.geri:focus-visible { text-decoration: underline; }
+
+.detay-kutu {
+  background: var(--beyaz);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--golge);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+.detay-kutu img,
+.detay-kutu .resim-yok {
+  /* Sağdaki özellik listesi uzun olduğunda (çok sayıda teknik özellik satırı)
+     grid sütunu çok yükseliyordu; görsel de height:100% ile o yüksekliğe
+     zorlanınca kaynak çözünürlüğünün çok üstüne büyütülüp pikselleşiyordu.
+     Bunun yerine ekran genişliğine göre sabit/sınırlı bir yükseklik kullanıyoruz. */
+  width: 100%;
+  height: 340px;
+  object-position: center;
+}
+@media (min-width: 900px) {
+  .detay-kutu img,
+  .detay-kutu .resim-yok { height: 480px; }
+}
+
+.detay-bilgi { padding: var(--b-8); }
+.detay-bilgi h1 { margin: var(--b-1) 0 var(--b-2); }
+.detay-bilgi p { margin-top: var(--b-3); line-height: 1.6; }
+
+.ozellikler { width: 100%; border-collapse: collapse; margin-top: var(--b-4); }
+.ozellikler td { padding: var(--b-2) var(--b-1); border-bottom: 1px solid var(--kenar-soluk); }
+.ozellikler td:first-child { font-weight: 700; width: 45%; }
+
+@media (max-width: 700px) {
+  .detay-kutu { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Yönetim Paneli (Admin)
+   ========================================================================== */
+
+.admin-kap { max-width: 900px; margin: 30px auto; padding: 0 var(--b-5); }
+
+.panel {
+  background: var(--beyaz);
+  border-radius: var(--radius-md);
+  padding: var(--b-6);
+  box-shadow: var(--golge);
+  margin-bottom: var(--b-5);
+}
+.panel h2 { margin-bottom: var(--b-4); }
+
+fieldset {
+  border: 1px solid var(--kenar-soluk);
+  border-radius: var(--radius-sm);
+  padding: var(--b-4);
+  margin-bottom: var(--b-4);
+}
+fieldset legend {
+  font-weight: 700;
+  padding: 0 var(--b-2);
+  color: var(--ana);
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--b-3); }
+.form-grid .tam { grid-column: 1 / -1; }
+
+label { font-weight: 600; font-size: .85rem; display: block; margin-bottom: var(--b-1); }
+input, select, textarea {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid var(--kenar);
+  border-radius: var(--radius-sm);
+  font-size: .95rem;
+  font-family: inherit;
+  color: var(--yazi);
+}
+textarea { min-height: 70px; resize: vertical; }
+
+.btn {
+  background: var(--ana);
+  color: var(--beyaz);
+  border: none;
+  padding: 10px var(--b-6);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: opacity var(--gecis);
+}
+.btn:hover { opacity: .9; }
+.btn-kucuk { padding: 6px 14px; font-size: .85rem; margin-right: var(--b-2); }
+.btn-gri { background: var(--yazi-soluk); }
+
+.liste-tablo { width: 100%; border-collapse: collapse; }
+.liste-tablo th, .liste-tablo td {
+  padding: 10px var(--b-2);
+  border-bottom: 1px solid var(--kenar-soluk);
+  text-align: left;
+}
+.liste-tablo img { width: 60px; height: 45px; object-fit: cover; border-radius: var(--b-1); }
+
+.mesaj { padding: var(--b-2); border-radius: var(--radius-sm); margin-bottom: var(--b-3); display: none; }
+.mesaj.basari { background: var(--basari-bg); color: var(--basari); display: block; }
+.mesaj.hata { background: var(--hata-bg); color: var(--hata); display: block; }
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Alt Bilgi (Footer)
+   ========================================================================== */
+
+footer {
+  background: var(--koyu);
+  color: #aaa;
+  text-align: center;
+  padding: var(--b-5);
+  margin-top: var(--b-5);
+  font-size: .85rem;
+}
