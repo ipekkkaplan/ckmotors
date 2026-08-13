@@ -7,7 +7,6 @@ import rateLimit from 'express-rate-limit';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import db from './db';
 import { ALANLAR, type Motor } from './tipler';
 
@@ -57,22 +56,25 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Multer'i doğrudan CloudinaryStorage ile ve form verilerini doğru işleyecek şekilde tanımlıyoruz
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (_req, file) => {
-    return {
-      folder: 'ckmotors-uploads',
-      format: file.mimetype.split('/')[1] || 'png',
-      public_id: 'motor-' + Date.now(),
-    };
-  },
-});
-
+// Dosyaları geçici olarak RAM (Memory) üzerinde tutuyoruz (Vercel ile %100 uyumlu)
 const upload = multer({
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
 });
+
+// Buffer verisini Cloudinary'ye yükleyen yardımcı fonksiyon
+const cloudinaryYukle = (buffer: Buffer): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'ckmotors-uploads' },
+      (error, result) => {
+        if (error || !result) return reject(error);
+        resolve(result.secure_url);
+      }
+    );
+    stream.end(buffer);
+  });
+};
 
 const apiSiniri = rateLimit({
   windowMs: 60 * 1000,
@@ -167,7 +169,12 @@ app.post('/api/admin/motorlar', adminGerekli, upload.single('resim'), async (req
     if (!b.marka || !b.model) {
       return res.status(400).json({ hata: 'Marka ve model zorunlu' });
     }
-    const resim = req.file ? req.file.path : null; // Cloudinary URL
+    
+    let resim: string | null = null;
+    if (req.file) {
+      resim = await cloudinaryYukle(req.file.buffer);
+    }
+
     const degerler = ALANLAR.map(a => (a === 'fiyat' ? (b.fiyat ? parseFloat(b.fiyat) : 0) : (b[a] || null)));
     
     const result = await db.execute({
@@ -191,7 +198,7 @@ app.put('/api/admin/motorlar/:id', adminGerekli, upload.single('resim'), async (
     const b = req.body as Record<string, string | undefined>;
     let resim = eski.resim;
     if (req.file) {
-      resim = req.file.path; // Cloudinary URL
+      resim = await cloudinaryYukle(req.file.buffer);
     }
 
     const eskiKayit = eski as unknown as Record<string, unknown>;
