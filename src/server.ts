@@ -56,6 +56,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// GEÇİCİ TEŞHİS KAYDI — sorun çözülünce kaldırılacak. Gerçek değerleri asla
+// yazmaz, yalnızca uzunluk ve ilk/son birkaç karakteri gösterir; böylece
+// Vercel'in ortam değişkenini hiç görmediğini mi (undefined/boş), yoksa
+// içinde görünmeyen bir boşluk/satır sonu mu olduğunu ayırt edebiliriz.
+function güvenliOnizleme(deger: string | undefined): string {
+  if (deger === undefined) return 'TANIMSIZ (Vercel bu değişkeni hiç görmüyor)';
+  if (deger.length === 0) return 'BOŞ STRING';
+  const ilk = deger.slice(0, 4);
+  const son = deger.slice(-2);
+  return `uzunluk=${deger.length}, "${ilk}...${son}", JSON=${JSON.stringify(deger)}`;
+}
+console.log('[TEŞHİS] CLOUDINARY_CLOUD_NAME:', güvenliOnizleme(process.env.CLOUDINARY_CLOUD_NAME));
+console.log('[TEŞHİS] CLOUDINARY_API_KEY:', güvenliOnizleme(process.env.CLOUDINARY_API_KEY));
+console.log('[TEŞHİS] CLOUDINARY_API_SECRET:', güvenliOnizleme(process.env.CLOUDINARY_API_SECRET));
+
 // Dosyaları geçici olarak RAM (Memory) üzerinde tutuyoruz (Vercel ile %100 uyumlu)
 const upload = multer({
   storage: multer.memoryStorage(),
